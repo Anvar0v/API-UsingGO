@@ -20,14 +20,8 @@ func GetMovies() []models.Movie {
 	row, err := db.Query("SELECT * FROM movies")
 
 	if err != nil {
-		log.Fatal("There is problem in retrieving data from DB", row)
+		log.Fatal("There is problem with retrieving data from DB", row)
 	}
-
-	// for row.Next() {
-
-	// }
-
-	// movies = append(movies, newMovie)
 
 	return movies
 }
