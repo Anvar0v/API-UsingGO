@@ -18,6 +18,7 @@ func NewMoviesController(DB *gorm.DB) MoviesController {
 	return MoviesController{DB}
 }
 
+// Endpoint for creating a new movie
 func (mc *MoviesController) CreateMovie(ctx *gin.Context) {
 	var createMovieDto *dtos.CreateMovieDto
 
@@ -29,7 +30,7 @@ func (mc *MoviesController) CreateMovie(ctx *gin.Context) {
 	newMovie := models.Movie{
 		Name:        createMovieDto.Name,
 		ReleaseDate: createMovieDto.ReleaseDate,
-		AuthorName:      createMovieDto.AuthorName,
+		AuthorName:  createMovieDto.AuthorName,
 	}
 
 	createMovieResult := mc.DB.Create(&newMovie)
@@ -42,6 +43,7 @@ func (mc *MoviesController) CreateMovie(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": newMovie})
 }
 
+// Retrieving the list of movies
 func (mc *MoviesController) GetMovies(ctx *gin.Context) {
 	page := ctx.DefaultQuery("p	age", "1")
 	limit := ctx.DefaultQuery("limit", "10")
@@ -62,6 +64,7 @@ func (mc *MoviesController) GetMovies(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": movies})
 }
 
+// Retrieving certain movie by id
 func (mc *MoviesController) GetMovieById(ctx *gin.Context) {
 	movieId := ctx.Param("movieId")
 
@@ -74,4 +77,37 @@ func (mc *MoviesController) GetMovieById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": movie})
+}
+
+// Deleting particular movie
+func (mc *MoviesController) DeleteMovie(ctx *gin.Context) {
+	movieId := ctx.Param("movieId")
+
+	deleteResult := mc.DB.Delete(&models.Movie{}, "id = ?", movieId)
+
+	if deleteResult.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "No movie with that Id exists"})
+		return
+	}
+
+	ctx.JSON(http.StatusNoContent, nil)
+}
+
+func (mc *MoviesController) UpdateMovie(ctx *gin.Context) {
+	movieId := ctx.Param("movieId")
+
+	var movie *dtos.UpdateMovieDto
+
+	if err := ctx.ShouldBindJSON(&movie); err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	var updatedMovie models.Movie
+	getByIdResult := mc.DB.First(&updatedMovie, "id = ?", movieId)
+
+	if getByIdResult.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "failed", "message": "No such movie with that Id exists"})
+		return
+	}
 }
