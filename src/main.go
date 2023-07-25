@@ -11,6 +11,6 @@ func init() {
 }
 
 func main() {
-	config.DB.AutoMigrate(&models.Author{}, &models.Movie{})
+	config.DB.AutoMigrate(&models.Movie{})
 	fmt.Println("? Migration completed")
 }
