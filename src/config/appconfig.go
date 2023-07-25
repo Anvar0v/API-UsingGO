@@ -1,36 +1,24 @@
 package config
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var db sql.DB
+var DB *gorm.DB
 
-func Connect() {
-	const (
-		host     = "localhost"
-		port     = 5432
-		user     = "postgres"
-		password = "postgres"
-		dbname   = "calhounio_demo"
-	)
+func ConnectDB() {
+	var err error
+	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		"localhost", "postgres", "postgres", "go-onlineshop", "5432")
 
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	db, err := sql.Open("postgres", connectionString)
-
+	DB, err = gorm.Open(postgres.Open(connectionString))
 	if err != nil {
-		log.Fatal("Could not connect to the db")
+		log.Fatal("Failed to connect to the Database")
 	}
-	defer db.Close()
-}
-
-func GetDbObject() *sql.DB {
-	return &db
+	fmt.Println("? Connected Successfully to the Database")
 }

@@ -2,10 +2,15 @@ package main
 
 import (
 	"fmt"
-	"movies_api/services"
+	"movies_api/config"
+	"movies_api/models"
 )
 
-func main(){
-	services := services.GetMovies();
-	fmt.Print(services[len(services)-1])
+func init() {
+	config.ConnectDB()
+}
+
+func main() {
+	config.DB.AutoMigrate(&models.Author{}, &models.Movie{})
+	fmt.Println("? Migration completed")
 }
