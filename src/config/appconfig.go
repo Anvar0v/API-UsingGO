@@ -14,7 +14,7 @@ var DB *gorm.DB
 func ConnectToDB() {
 	var err error
 	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		"localhost", "postgres", "postgres", "go-onlineshop", "5432")
+		"localhost","postgres","postgres","go-onlineshop","5432")
 
 	DB, err = gorm.Open(postgres.Open(connectionString))
 	if err != nil {
