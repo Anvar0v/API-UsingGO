@@ -3,5 +3,5 @@
 - [x] Gorm
 - [x] PostgreSQL
 - [x] GoLang
-- [ ] Docker
+- [x] Docker
 - [ ] Deploying app 
