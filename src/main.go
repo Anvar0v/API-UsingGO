@@ -30,10 +30,12 @@ func main() {
 	fmt.Println("? Migration completed")
 
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowOrigins = []string{"http://localhost:8080"}
 
+	//implementing cors configuration
 	server.Use(cors.New(corsConfig))
 	router := server.Group("/api")
-
 	MovieRouteController.MoviesRoute(router)
+	//running application in port 8080
+	server.Run(":8080")
 }

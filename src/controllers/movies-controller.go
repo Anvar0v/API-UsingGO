@@ -14,6 +14,7 @@ type MoviesController struct {
 	DB *gorm.DB
 }
 
+//injecting instance of gorm.DB
 func NewMoviesController(DB *gorm.DB) MoviesController {
 	return MoviesController{DB}
 }
